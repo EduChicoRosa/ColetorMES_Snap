@@ -28,6 +28,9 @@ CONST Diferenca = 320
 CONST TempoDeCiclo = 1
 CONST Contador = 2
 CONST activeConnections = 12
+CONST Emergency_4063 = 20
+CONST Ready_4063 = 23
+CONST Word_Status_4063 = 27
 
 ' --- Status da Maquina ---
 ' Constantes para os valores de cada bit de status (potencias de 2)
@@ -39,8 +42,6 @@ CONST Status_Bit_Ready_Val           = 16  ' Bit4: 2^4
 CONST Status_Bit_Falha_Val           = 32  ' Bit5: 2^5
 CONST Status_Bit_Setup_Val           = 64  ' Bit6: 2^6
 CONST Status_Bit_Emergencia_Val      = 128 ' Bit7: 2^7
-
-CONST MachineStatusReg = 330 ' Registrador local para armazenar o status INT da maquina (escolha um endereco livre)
 
 'Registrador do HUB
 CONST P2_Active_State = 1002
@@ -205,8 +206,7 @@ FUNCTION CalcularEMostrarStatusMaquina()
     IF Cond_Emergencia = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Emergencia_Val
     
     MachineStatusINT = currentStatusINT ' Atualiza a variavel global
-    Err = SETREG(MachineStatusReg, MachineStatusINT, DXM_LocalReg, HoldingReg) ' Salva no registrador local
-    print "Status da Maquina (INT): ", MachineStatusINT ' Imprime para debug
+    Err = SETREG(Word_Status_4063, MachineStatusINT, DXM_LocalReg, HoldingReg) ' Salva no registrador local
 END FUNCTION
 
 'WHILE DE EXECUCAO DO SCRIPT
@@ -223,13 +223,14 @@ While(1)
     ' Exemplo: Definir algumas condicoes (substitua pela logica real da sua maquina)
     ' Para testar o exemplo "Ready e Running (18)":
     Cond_PlannedDownTime = 0
-    Cond_Running = 1         ' Bit1 Ativo
+    Cond_Running = 0 
     Cond_Starving = 0
     Cond_Blocked = 0
-    Cond_Ready = 1           ' Bit4 Ativo
+    Cond_Ready = 0
+    IF Ready_4063 = 1 THEN Cond_Ready = 1 ELSE Cond_Ready = 0
     Cond_Falha = 0
     Cond_Setup = 0
-    Cond_Emergencia = 0
+    IF Emergency_4063 = 1 THEN Cond_Emergencia = 1 ELSE Cond_Emergencia = 0    
     CalcularEMostrarStatusMaquina
 
 Wend
