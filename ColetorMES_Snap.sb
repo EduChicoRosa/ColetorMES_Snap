@@ -28,8 +28,6 @@ CONST Diferenca = 320
 CONST TempoDeCiclo = 1
 CONST Contador = 2
 CONST activeConnections = 12
-CONST Emergency_4063 = 20
-CONST Ready_4063 = 23
 CONST Word_Status_4063 = 27
 
 ' --- Status da Maquina ---
@@ -191,6 +189,12 @@ IF i1 = 999 THEN
 END IF
 END FUNCTION
 
+' --- Funcao para Ler Estado das Entradas Snap ---
+FUNCTION LerEntradasSnap()
+    Ready_4063 = GETREG(23, DXM_LocalReg, HoldingReg)
+    Emergency_4063 = GETREG(20, DXM_LocalReg, HoldingReg)
+END FUNCTION
+
 ' --- Funcao para Calcular o Status da Maquina ---
 FUNCTION CalcularEMostrarStatusMaquina()
     LOCAL currentStatusINT
@@ -220,7 +224,9 @@ While(1)
     GeraPulsoHUB2
 
     ' --- Logica de Atualizacao e Calculo do Status da Maquina ---
-    ' Exemplo: Definir algumas condicoes (substitua pela logica real da sua maquina)
+    ' Ler Entradas Digitais
+    LerEntradasSnap
+
     ' Para testar o exemplo "Ready e Running (18)":
     Cond_PlannedDownTime = 0
     Cond_Running = 0 
