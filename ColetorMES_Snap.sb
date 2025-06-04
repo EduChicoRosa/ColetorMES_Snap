@@ -1,6 +1,9 @@
 'Endereco padrao
 CONST DXM_LocalReg	= 199
 
+'HoldingReg padrao
+CONST HoldingReg = 0
+
 'MODBUSTYPE para cada porta
 CONST Port_0 = 0
 CONST Port_1 = 256
@@ -9,26 +12,49 @@ CONST Port_3 = 768
 CONST Port_4 = 1024
 
 'SLAVE IDs somado do offset para porta
-CONST MB_Broadcast	= 0
-CONST HUB1 = 20
-CONST HUB2 = 21
-CONST HUB3 = 22
-CONST HUB4 = 23
-CONST HUB5 = 24
-CONST HUB6 = 25
-CONST HUB7 = 26
-CONST HUB8 = 27
+CONST MB_Broadcast = 0
 
+' --- Configuracoes DOB1 ---
+CONST DOB1_SLAVE_ID = 1                   ' Exemplo: Slave ID do distribuidor Modbus da DOB1
+CONST DOB1_PORT = Port_1                  ' DOB1 conectada na Porta 1 do DXM
+' Registradores Locais do DXM para DOB1
+CONST DOB1_REG_LOC_INPUT_PART_PULSE = 2   ' ATENCAO: Defina o registrador local para o pulso de contagem de peca da DOB1
+CONST DOB1_REG_LOC_TEMPO_CICLO = 1
+CONST DOB1_REG_LOC_CONTADOR_PECAS = 3
+CONST DOB1_REG_LOC_STATUS_MAQUINA = 11
+CONST DOB1_REG_LOC_ACTIVE_CONNECTION = 12  ' Status da Conexao Ativa DOB1 (0=Inativo, 1=Ativo)
+CONST DOB1_REG_LOC_INPUT_READY = 7        ' Registrador local do DXM para entrada Ready da DOB1 (ajustar se for de outro local)
+CONST DOB1_REG_LOC_INPUT_EMERGENCY = 4    ' Registrador local do DXM para entrada Emergency da DOB1 (ajustar)
+CONST DOB1_REG_LOC_INPUT_FALHA = 6        ' Registrador local do DXM para entrada Falha da DOB1
+CONST DOB1_REG_LOC_INPUT_RUNNING = 10      ' Registrador local do DXM para entrada Running da DOB1 (Ex: reg 63, ajustar)
 
-'Registradores Locais
+' --- Configuracoes DOB2 ---
+CONST DOB2_SLAVE_ID = 20                   ' Exemplo: Slave ID do distribuidor Modbus da DOB2 (unico na Port_4)
+CONST DOB2_PORT = Port_4                  ' DOB2 conectada via antena na Porta 4 do DXM
+' Registradores Locais do DXM para DOB2
+CONST DOB2_REG_LOC_INPUT_PART_PULSE = 22   ' ATENCAO: Defina o registrador local para o pulso de contagem de peca da DOB2
+CONST DOB2_REG_LOC_TEMPO_CICLO = 21
+CONST DOB2_REG_LOC_CONTADOR_PECAS = 23
+CONST DOB2_REG_LOC_STATUS_MAQUINA = 31
+CONST DOB2_REG_LOC_ACTIVE_CONNECTION = 32  ' Status da Conexao Ativa DOB2
+CONST DOB2_REG_LOC_INPUT_READY = 27
+CONST DOB2_REG_LOC_INPUT_EMERGENCY = 24
+CONST DOB2_REG_LOC_INPUT_FALHA = 26
+CONST DOB2_REG_LOC_INPUT_RUNNING = 30      ' Registrador local do DXM para entrada Running da DOB2 (Ex: reg 64, ajustar)
 
-CONST TempoReg = 300
-CONST TempoRegPulso = 310
-CONST Diferenca = 320
-CONST TempoDeCiclo = 1
-CONST Contador = 2
-CONST activeConnections = 12
-CONST Word_Status_4063 = 27
+' --- Configuracoes DOB3 ---
+CONST DOB3_SLAVE_ID = 21                   ' Exemplo: Slave ID do distribuidor Modbus da DOB3 (unico na Port_4)
+CONST DOB3_PORT = Port_4                  ' DOB3 conectada via antena na Porta 4 do DXM
+' Registradores Locais do DXM para DOB3
+CONST DOB3_REG_LOC_INPUT_PART_PULSE = 42   ' ATENCAO: Defina o registrador local para o pulso de contagem de peca da DOB3
+CONST DOB3_REG_LOC_TEMPO_CICLO = 41
+CONST DOB3_REG_LOC_CONTADOR_PECAS = 43
+CONST DOB3_REG_LOC_STATUS_MAQUINA = 51
+CONST DOB3_REG_LOC_ACTIVE_CONNECTION = 52  ' Status da Conexao Ativa DOB3
+CONST DOB3_REG_LOC_INPUT_READY = 47
+CONST DOB3_REG_LOC_INPUT_EMERGENCY = 44
+CONST DOB3_REG_LOC_INPUT_FALHA = 46
+CONST DOB3_REG_LOC_INPUT_RUNNING = 50      ' Registrador local do DXM para entrada Running da DOB3 (Ex: reg 65, ajustar)
 
 ' --- Status da Maquina ---
 ' Constantes para os valores de cada bit de status (potencias de 2)
@@ -41,202 +67,346 @@ CONST Status_Bit_Falha_Val           = 32  ' Bit5: 2^5
 CONST Status_Bit_Setup_Val           = 64  ' Bit6: 2^6
 CONST Status_Bit_Emergencia_Val      = 128 ' Bit7: 2^7
 
-'Registrador do HUB
-CONST P2_Active_State = 1002
-CONST P2_Counter = 1012
-CONST P4_Counter = 1004
+' --- Variaveis Globais para DOB1 ---
+' TemponovoPulso_dob1 = 0 ' Removido - Nao mais usado
+ContadorPecas_i_dob1 = 0           ' Contador de pecas processado localmente
+UltimoStatusPulsoPeca_dob1 = 0     ' Armazena o estado anterior do pulso de contagem de peca
+StartTime_dob1 = 0                 ' System time no inicio do ciclo
+CycleTime_dob1 = 0                 ' Tempo de ciclo calculado
+Ready_input_dob1 = 0
+Emergency_input_dob1 = 0
+Falha_input_dob1 = 0
+Running_input_dob1 = 0
+Cond_PlannedDownTime_dob1 = 0
+Cond_Running_dob1 = 0
+Cond_Starving_dob1 = 0
+Cond_Blocked_dob1 = 0
+Cond_Ready_dob1 = 0
+Cond_Falha_dob1 = 0
+Cond_Setup_dob1 = 0
+Cond_Emergencia_dob1 = 0
+MachineStatusINT_dob1 = 0
 
-'Variaveis internas
-TemponovoPulso1 = 0
-TemponovoPulso2 = 0
-TemponovoPulso3 = 0
-TemponovoPulso4 = 0
-TemponovoPulso5 = 0
-TemponovoPulso6 = 0
-TemponovoPulso7 = 0
-TemponovoPulso8 = 0
-i0 = 0
-i1 = 0
-i2 = 0
-i3 = 0
-i4 = 0
-i5 = 0
-i6 = 0
-i7 = 0
-i8 = 0
-active1 = 0
-active2 = 0
-active3 = 0
-active4 = 0
-active5 = 0
-active6 = 0
-active7 = 0
-active8 = 0
+' --- Variaveis Globais para DOB2 ---
+ContadorPecas_i_dob2 = 0           ' Contador de pecas processado localmente
+UltimoStatusPulsoPeca_dob2 = 0     ' Armazena o estado anterior do pulso de contagem de peca
+StartTime_dob2 = 0
+CycleTime_dob2 = 0
+Ready_input_dob2 = 0
+Emergency_input_dob2 = 0
+Falha_input_dob2 = 0
+Running_input_dob2 = 0
+Cond_PlannedDownTime_dob2 = 0
+Cond_Running_dob2 = 0
+Cond_Starving_dob2 = 0
+Cond_Blocked_dob2 = 0
+Cond_Ready_dob2 = 0
+Cond_Falha_dob2 = 0
+Cond_Setup_dob2 = 0
+Cond_Emergencia_dob2 = 0
+MachineStatusINT_dob2 = 0
 
-' Variaveis para o estado atual da maquina (0 para Inativo, 1 para Ativo)
-' Estas variaveis devem ser atualizadas pela logica especifica da sua maquina.
-Cond_PlannedDownTime = 0
-Cond_Running = 0
-Cond_Starving = 0
-Cond_Blocked = 0
-Cond_Ready = 0
-Cond_Falha = 0
-Cond_Setup = 0
-Cond_Emergencia = 0
+' --- Variaveis Globais para DOB3 ---
+ContadorPecas_i_dob3 = 0           ' Contador de pecas processado localmente
+UltimoStatusPulsoPeca_dob3 = 0     ' Armazena o estado anterior do pulso de contagem de peca
+StartTime_dob3 = 0
+CycleTime_dob3 = 0
+Ready_input_dob3 = 0
+Emergency_input_dob3 = 0
+Falha_input_dob3 = 0
+Running_input_dob3 = 0
+Cond_PlannedDownTime_dob3 = 0
+Cond_Running_dob3 = 0
+Cond_Starving_dob3 = 0
+Cond_Blocked_dob3 = 0
+Cond_Ready_dob3 = 0
+Cond_Falha_dob3 = 0
+Cond_Setup_dob3 = 0
+Cond_Emergencia_dob3 = 0
+MachineStatusINT_dob3 = 0
 
-' Variavel para armazenar o status da maquina como inteiro
-MachineStatusINT = 0
+UltimaVerificacaoConexao = 0 ' Tempo da ultima verificacao (em segundos, comparar com GETSYSTIME())
+
+' Variavel global Err para status de operacoes Modbus
+Err = 0
+
+FUNCTION CheckError(contextMessage)
+    IF Err <> 0 THEN
+        ' Em um ambiente de produção, você pode querer logar isso de forma diferente
+        ' ou acionar um indicador de erro.
+        PRINT "ERRO MODBUS: ", Err, " em ", contextMessage
+        ' Considerar uma ação de tratamento de erro mais robusta aqui.
+    ENDIF
+END FUNCTION
+
+FUNCTION CheckConnection(slaveID, port, reg_active, machineName)
+    LOCAL dummyValue, currentTime
+    dummyValue = GETREG(1, slaveID, port) ' Tenta ler um registrador qualquer (ex: reg 1)
+    currentTime = GETSYSTIME()
+    IF Err = 0 THEN
+        Err = SETREG(reg_active, 1, DXM_LocalReg, HoldingReg) ' Conexao ativa
+        CheckError("CheckConnection " + machineName + " SETREG " + reg_active + " = 1 (Ativo)")
+        PRINT "Conexao com ", machineName, " (Slave ", slaveID, " na porta ", port, ") VERIFICADA e ATIVA.\n"
+    ELSE
+        Err = SETREG(reg_active, 0, DXM_LocalReg, HoldingReg) ' Erro na conexao
+        CheckError("CheckConnection " + machineName + " SETREG " + reg_active + " = 0 (Inativo)")
+        PRINT "ERRO de conexao com ", machineName, " (Slave ", slaveID, " na porta ", port, ").\n"
+    ENDIF
+END FUNCTION
+
+FUNCTION ActiveConnection()
+    LOCAL currentTime
+    currentTime = GETSYSTIME()
+    
+    ' Verifica a cada 15 minutos (900 segundos) após a primeira verificacao (UltimaVerificacaoConexao = 0)
+    IF UltimaVerificacaoConexao = 0 OR currentTime - UltimaVerificacaoConexao >= 900 THEN
+        CheckConnection(DOB1_SLAVE_ID, DOB1_PORT, DOB1_REG_LOC_ACTIVE_CONNECTION, "DOB1")
+        CheckConnection(DOB2_SLAVE_ID, DOB2_PORT, DOB2_REG_LOC_ACTIVE_CONNECTION, "DOB2")
+        CheckConnection(DOB3_SLAVE_ID, DOB3_PORT, DOB3_REG_LOC_ACTIVE_CONNECTION, "DOB3")
+        UltimaVerificacaoConexao = currentTime
+    ENDIF
+END FUNCTION
+
 
 FUNCTION ResetTimer(TReg)
-    Err = SETREG(TReg, 0, DXM_LocalReg, HoldingReg)
+    Err = SETREG(TReg, 0, DXM_LocalReg, HoldingReg) ' Reseta um registrador local do DXM (usado como timer)
+    CheckError("ResetTimer TReg: " + TReg)
 END FUNCTION
 
-FUNCTION ResetTimerPulso(TRegPulso)
-    Err = SETREG(TRegPulso, 0, DXM_LocalReg, HoldingReg)
+FUNCTION TempoDeCicloEContagem_dob1()
+    LOCAL StatusAtualPulsoPeca_val, EndTime_val
+    
+    StatusAtualPulsoPeca_val = GETREG(DOB1_REG_LOC_INPUT_PART_PULSE, DXM_LocalReg, HoldingReg)
+    CheckError("TempoDeCicloEContagem_dob1 GETREG DOB1_REG_LOC_INPUT_PART_PULSE")
+
+    IF StatusAtualPulsoPeca_val = 1 AND UltimoStatusPulsoPeca_dob1 = 0 THEN ' Detecta borda de subida do pulso de peca
+        ' Incrementa contador de pecas local
+        ContadorPecas_i_dob1 = ContadorPecas_i_dob1 + 1
+        Err = SETREG(DOB1_REG_LOC_CONTADOR_PECAS, ContadorPecas_i_dob1, DXM_LocalReg, HoldingReg)
+        CheckError("TempoDeCicloEContagem_dob1 SETREG DOB1_REG_LOC_CONTADOR_PECAS")
+        
+        IF StartTime_dob1 <> 0 THEN ' Se um ciclo anterior foi iniciado
+            EndTime_val = GETSYSTIME()
+            IF EndTime_val >= StartTime_dob1 THEN ' Checagem basica de progressao do tempo
+                CycleTime_dob1 = EndTime_val - StartTime_dob1
+            ELSE
+                CycleTime_dob1 = 0 ' Lida com possivel wrap-around do GETSYSTIME ou erro
+            ENDIF
+            Err = SETREG(DOB1_REG_LOC_TEMPO_CICLO, CycleTime_dob1, DXM_LocalReg, HoldingReg) ' Armazena o tempo de ciclo calculado
+            CheckError("TempoDeCicloEContagem_dob1 SETREG DOB1_REG_LOC_TEMPO_CICLO com valor: " + CycleTime_dob1)
+        END IF
+        
+        ' Inicia a cronometragem para o proximo ciclo
+        StartTime_dob1 = GETSYSTIME()
+    END IF
+    UltimoStatusPulsoPeca_dob1 = StatusAtualPulsoPeca_val ' Atualiza o estado anterior do pulso
+
+    IF ContadorPecas_i_dob1 >= 9999 THEN ' Reset do contador de pecas local
+        ContadorPecas_i_dob1 = 0
+    END IF
 END FUNCTION
 
-FUNCTION GeraPulsoHUB1
-LOCAL TempoPulso1, Diff1
-TempoPulso1 = GETREG(HUB1+TempoRegPulso+1-20, DXM_LocalReg, HoldingReg)
-Diff1 = TempoPulso1 - TemponovoPulso1
-Err = SETREG(HUB1+Diferenca+1-20, Diff1, DXM_LocalReg, HoldingReg)
-    IF Diff1 >= 3 THEN
-        'active = NOT active
-        active1 = 1
-        Err = SETREG(((HUB1*16)+12-320), active1, DXM_LocalReg, HoldingReg)
-        TemponovoPulso1 = TempoPulso1
-    ELSE
-        active1 = 0
-        Err = SETREG(((HUB1*16)+12-320), active1, DXM_LocalReg, HoldingReg)
-    END IF    
+FUNCTION LerEntradas_dob1()
+    Ready_input_dob1 = GETREG(DOB1_REG_LOC_INPUT_READY, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob1 GETREG DOB1_REG_LOC_INPUT_READY")
+    Emergency_input_dob1 = GETREG(DOB1_REG_LOC_INPUT_EMERGENCY, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob1 GETREG DOB1_REG_LOC_INPUT_EMERGENCY")
+    Falha_input_dob1 = GETREG(DOB1_REG_LOC_INPUT_FALHA, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob1 GETREG DOB1_REG_LOC_INPUT_FALHA")
+    Running_input_dob1 = GETREG(DOB1_REG_LOC_INPUT_RUNNING, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob1 GETREG DOB1_REG_LOC_INPUT_RUNNING")
 END FUNCTION
 
-FUNCTION GeraPulsoHUB2
-LOCAL TempoPulso2, Diff2
-'Busco o tempo do registrador local TempoRegPulso (310)
-TempoPulso2 = GETREG(HUB2+TempoRegPulso+1-20, DXM_LocalReg, HoldingReg)
-'Calcula diferenca de tempo 
-Diff2 = TempoPulso2 - TemponovoPulso2
-'Escrevo o resultado da diferenca no registrador local Diferenca(320)
-Err = SETREG(HUB2+Diferenca+1-20, Diff2, DXM_LocalReg, HoldingReg)
-'Condicao de: Se a diferenca for maior que 3, active vai para um, enquanto nao for maior, fica em 0
-    IF Diff2 >= 3 THEN
-        'active = NOT active
-        active2 = 1
-        Err = SETREG(((HUB2*16)+12-320), active2, DXM_LocalReg, HoldingReg)
-        TemponovoPulso2 = TempoPulso2
-    ELSE
-        active2 = 0
-        Err = SETREG(((HUB2*16)+12-320), active2, DXM_LocalReg, HoldingReg)
-    END IF    
-END FUNCTION
-
-FUNCTION TempoDeCicloEContagemHUB1
-LOCAL Tempo1, Temponovo1
-'Leitura do registrador de contagem do HUB (Pino 2 da Porta 1 do R95C)
-Count1 = GETREG(P4_Counter, HUB1, Port_4)
-'print "Contador: ", Count, "\n"
-Tempo1 = GETREG(HUB1+TempoReg+1-20, DXM_LocalReg, HoldingReg)
-'print "Tempo: ", Tempo, "\n"
-'Comparo o contador interno com o contador do HUB, se for diferente, entra na condicao.
-IF Count1 <> Counter1 THEN
-    'Somo a variavel de contagem
-    i0=i0+1
-    'Escrevo a variavel de contagem no registrador local "Contador" '
-    Err = SETREG(((HUB1*16)+2-320),i0,DXM_LocalReg,HoldingReg)
-    'ContagemAntiga = Contagem 
-    Temponovo1 = Tempo1
-    print "Tempo de ciclo HUB 1: ", Temponovo1, "\n"
-    'Escrevo a variavel de contagem no registrador local "TempoDeCiclo" '
-    Err = SETREG(((HUB1*16)+1-320), Temponovo1, DXM_LocalReg, HoldingReg)
-    'Reseto o tempo do registrador local para iniciar a contagem de um novo ciclo
-    ResetTimer(HUB1+TempoReg+1-20)
-    Counter1 = Count1
-    print "Contador HUB 1: ", Counter1, "\n"
-END IF
-'Caso o valor de contagem atinja 9999, o contador e zerado
-IF i0 = 9999 THEN
-    i0 = 0
-END IF
-END FUNCTION
-
-FUNCTION TempoDeCicloEContagemHUB2
-LOCAL Tempo2, Temponovo2
-'Leitura do registrador de contagem do HUB (Pino 2 da Porta 1 do R95C)
-Count2 = GETREG(P4_Counter, HUB2, Port_4)
-'print "Contador: ", Count, "\n"
-Tempo2 = GETREG(HUB2+TempoReg+1-20, DXM_LocalReg, HoldingReg)
-'print "Tempo: ", Tempo, "\n"
-'Comparo o contador interno com o contador do HUB, se for diferente, entra na condicao.
-IF Count2 <> Counter2 THEN
-    'Somo a variavel de contagem
-    i1=i1+1
-    'Escrevo a variavel de contagem no registrador local "Contador" '
-    Err = SETREG(((HUB2*16)+2-320),i1,DXM_LocalReg,HoldingReg)
-    'ContagemAntiga = Contagem 
-    Temponovo2 = Tempo2
-    print "Tempo de ciclo HUB 2: ", Temponovo2, "\n"
-    'Escrevo a variavel de contagem no registrador local "TempoDeCiclo" '
-    Err = SETREG(((HUB2*16)+1-320), Temponovo2, DXM_LocalReg, HoldingReg)
-    'Reseto o tempo do registrador local para iniciar a contagem de um novo ciclo
-    ResetTimer(HUB2+TempoReg+1-20)
-    Counter2 = Count2
-    print "Contador HUB 2: ", Counter2, "\n"
-END IF
-'Caso o valor de contagem atinja 9999, o contador e zerado
-IF i1 = 999 THEN
-    i1 = 0
-END IF
-END FUNCTION
-
-' --- Funcao para Ler Estado das Entradas Snap ---
-FUNCTION LerEntradasSnap()
-    Ready_4063 = GETREG(23, DXM_LocalReg, HoldingReg)
-    Emergency_4063 = GETREG(20, DXM_LocalReg, HoldingReg)
-END FUNCTION
-
-' --- Funcao para Calcular o Status da Maquina ---
-FUNCTION CalcularEMostrarStatusMaquina()
+FUNCTION CalcularEMostrarStatus_dob1()
     LOCAL currentStatusINT
     currentStatusINT = 0
-
-    IF Cond_PlannedDownTime = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_PlannedDownTime_Val
-    IF Cond_Running = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Running_Val
-    IF Cond_Starving = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Starving_Val
-    IF Cond_Blocked = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Blocked_Val
-    IF Cond_Ready = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Ready_Val
-    IF Cond_Falha = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Falha_Val
-    IF Cond_Setup = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Setup_Val
-    IF Cond_Emergencia = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Emergencia_Val
+    IF Cond_PlannedDownTime_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_PlannedDownTime_Val
+    IF Cond_Running_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Running_Val
+    IF Cond_Starving_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Starving_Val
+    IF Cond_Blocked_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Blocked_Val
+    IF Cond_Ready_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Ready_Val
+    IF Cond_Falha_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Falha_Val
+    IF Cond_Setup_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Setup_Val
+    IF Cond_Emergencia_dob1 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Emergencia_Val
     
-    MachineStatusINT = currentStatusINT ' Atualiza a variavel global
-    Err = SETREG(Word_Status_4063, MachineStatusINT, DXM_LocalReg, HoldingReg) ' Salva no registrador local
+    MachineStatusINT_dob1 = currentStatusINT
+    Err = SETREG(DOB1_REG_LOC_STATUS_MAQUINA, MachineStatusINT_dob1, DXM_LocalReg, HoldingReg)
+    CheckError("CalcularEMostrarStatus_dob1 SETREG DOB1_REG_LOC_STATUS_MAQUINA com valor: " + MachineStatusINT_dob1)
 END FUNCTION
 
-'WHILE DE EXECUCAO DO SCRIPT
+FUNCTION TempoDeCicloEContagem_dob2()
+    LOCAL StatusAtualPulsoPeca_val, EndTime_val
+
+    StatusAtualPulsoPeca_val = GETREG(DOB2_REG_LOC_INPUT_PART_PULSE, DXM_LocalReg, HoldingReg)
+    CheckError("TempoDeCicloEContagem_dob2 GETREG DOB2_REG_LOC_INPUT_PART_PULSE")
+
+    IF StatusAtualPulsoPeca_val = 1 AND UltimoStatusPulsoPeca_dob2 = 0 THEN ' Detecta borda de subida
+        ContadorPecas_i_dob2 = ContadorPecas_i_dob2 + 1
+        Err = SETREG(DOB2_REG_LOC_CONTADOR_PECAS, ContadorPecas_i_dob2, DXM_LocalReg, HoldingReg)
+        CheckError("TempoDeCicloEContagem_dob2 SETREG DOB2_REG_LOC_CONTADOR_PECAS")
+        
+        IF StartTime_dob2 <> 0 THEN ' Se um ciclo anterior foi iniciado
+            EndTime_val = GETSYSTIME()
+            IF EndTime_val >= StartTime_dob2 THEN
+                CycleTime_dob2 = EndTime_val - StartTime_dob2
+            ELSE
+                CycleTime_dob2 = 0
+            ENDIF
+            Err = SETREG(DOB2_REG_LOC_TEMPO_CICLO, CycleTime_dob2, DXM_LocalReg, HoldingReg)
+            CheckError("TempoDeCicloEContagem_dob2 SETREG DOB2_REG_LOC_TEMPO_CICLO com valor: " + CycleTime_dob2)
+        END IF
+        
+        StartTime_dob2 = GETSYSTIME()
+    END IF
+    UltimoStatusPulsoPeca_dob2 = StatusAtualPulsoPeca_val
+
+    IF ContadorPecas_i_dob2 >= 9999 THEN
+        ContadorPecas_i_dob2 = 0
+    END IF
+END FUNCTION
+
+FUNCTION LerEntradas_dob2()
+    Ready_input_dob2 = GETREG(DOB2_REG_LOC_INPUT_READY, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob2 GETREG DOB2_REG_LOC_INPUT_READY")
+    Emergency_input_dob2 = GETREG(DOB2_REG_LOC_INPUT_EMERGENCY, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob2 GETREG DOB2_REG_LOC_INPUT_EMERGENCY")
+    Falha_input_dob2 = GETREG(DOB2_REG_LOC_INPUT_FALHA, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob2 GETREG DOB2_REG_LOC_INPUT_FALHA")
+    Running_input_dob2 = GETREG(DOB2_REG_LOC_INPUT_RUNNING, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob2 GETREG DOB2_REG_LOC_INPUT_RUNNING")
+END FUNCTION
+
+FUNCTION CalcularEMostrarStatus_dob2()
+    LOCAL currentStatusINT
+    currentStatusINT = 0
+    IF Cond_PlannedDownTime_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_PlannedDownTime_Val
+    IF Cond_Running_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Running_Val
+    IF Cond_Starving_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Starving_Val
+    IF Cond_Blocked_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Blocked_Val
+    IF Cond_Ready_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Ready_Val
+    IF Cond_Falha_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Falha_Val
+    IF Cond_Setup_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Setup_Val
+    IF Cond_Emergencia_dob2 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Emergencia_Val
+    
+    MachineStatusINT_dob2 = currentStatusINT
+    Err = SETREG(DOB2_REG_LOC_STATUS_MAQUINA, MachineStatusINT_dob2, DXM_LocalReg, HoldingReg)
+    CheckError("CalcularEMostrarStatus_dob2 SETREG DOB2_REG_LOC_STATUS_MAQUINA com valor: " + MachineStatusINT_dob2)
+END FUNCTION
+
+FUNCTION TempoDeCicloEContagem_dob3()
+    LOCAL StatusAtualPulsoPeca_val, EndTime_val
+
+    StatusAtualPulsoPeca_val = GETREG(DOB3_REG_LOC_INPUT_PART_PULSE, DXM_LocalReg, HoldingReg)
+    CheckError("TempoDeCicloEContagem_dob3 GETREG DOB3_REG_LOC_INPUT_PART_PULSE")
+
+    IF StatusAtualPulsoPeca_val = 1 AND UltimoStatusPulsoPeca_dob3 = 0 THEN ' Detecta borda de subida
+        ContadorPecas_i_dob3 = ContadorPecas_i_dob3 + 1
+        Err = SETREG(DOB3_REG_LOC_CONTADOR_PECAS, ContadorPecas_i_dob3, DXM_LocalReg, HoldingReg)
+        CheckError("TempoDeCicloEContagem_dob3 SETREG DOB3_REG_LOC_CONTADOR_PECAS")
+        
+        IF StartTime_dob3 <> 0 THEN ' Se um ciclo anterior foi iniciado
+            EndTime_val = GETSYSTIME()
+            IF EndTime_val >= StartTime_dob3 THEN
+                CycleTime_dob3 = EndTime_val - StartTime_dob3
+            ELSE
+                CycleTime_dob3 = 0
+            ENDIF
+            Err = SETREG(DOB3_REG_LOC_TEMPO_CICLO, CycleTime_dob3, DXM_LocalReg, HoldingReg)
+            CheckError("TempoDeCicloEContagem_dob3 SETREG DOB3_REG_LOC_TEMPO_CICLO com valor: " + CycleTime_dob3)
+        END IF
+        
+        StartTime_dob3 = GETSYSTIME()
+    END IF
+    UltimoStatusPulsoPeca_dob3 = StatusAtualPulsoPeca_val
+
+    IF ContadorPecas_i_dob3 >= 9999 THEN
+        ContadorPecas_i_dob3 = 0
+    END IF
+END FUNCTION
+
+FUNCTION LerEntradas_dob3()
+    Ready_input_dob3 = GETREG(DOB3_REG_LOC_INPUT_READY, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob3 GETREG DOB3_REG_LOC_INPUT_READY")
+    Emergency_input_dob3 = GETREG(DOB3_REG_LOC_INPUT_EMERGENCY, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob3 GETREG DOB3_REG_LOC_INPUT_EMERGENCY")
+    Falha_input_dob3 = GETREG(DOB3_REG_LOC_INPUT_FALHA, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob3 GETREG DOB3_REG_LOC_INPUT_FALHA")
+    Running_input_dob3 = GETREG(DOB3_REG_LOC_INPUT_RUNNING, DXM_LocalReg, HoldingReg)
+    CheckError("LerEntradas_dob3 GETREG DOB3_REG_LOC_INPUT_RUNNING")
+END FUNCTION
+
+FUNCTION CalcularEMostrarStatus_dob3()
+    LOCAL currentStatusINT
+    currentStatusINT = 0
+    IF Cond_PlannedDownTime_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_PlannedDownTime_Val
+    IF Cond_Running_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Running_Val
+    IF Cond_Starving_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Starving_Val
+    IF Cond_Blocked_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Blocked_Val
+    IF Cond_Ready_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Ready_Val
+    IF Cond_Falha_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Falha_Val
+    IF Cond_Setup_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Setup_Val
+    IF Cond_Emergencia_dob3 = 1 THEN currentStatusINT = currentStatusINT + Status_Bit_Emergencia_Val
+    
+    MachineStatusINT_dob3 = currentStatusINT
+    Err = SETREG(DOB3_REG_LOC_STATUS_MAQUINA, MachineStatusINT_dob3, DXM_LocalReg, HoldingReg)
+    CheckError("CalcularEMostrarStatus_dob3 SETREG DOB3_REG_LOC_STATUS_MAQUINA com valor: " + MachineStatusINT_dob3)
+END FUNCTION
+
+'Rotina Cíclica
 While(1)
     
-    'Chamo a funcao de tempo de ciclo e contagem a cada ciclo do while
-    TempoDeCicloEContagemHUB1
-    TempoDeCicloEContagemHUB2
-    'Chamo a funcao de gerar pulso
-    GeraPulsoHUB1
-    GeraPulsoHUB2
+    ' --- Processamento para DOB1 ---
+    TempoDeCicloEContagem_dob1
+    LerEntradas_dob1
 
-    ' --- Logica de Atualizacao e Calculo do Status da Maquina ---
-    ' Ler Entradas Digitais
-    LerEntradasSnap
+    ' Definir condicoes de status para DOB1 (ajustar logica conforme necessario)
+    Cond_PlannedDownTime_dob1 = 0 ' Exemplo
+    Cond_Running_dob1 = Running_input_dob1
+    Cond_Starving_dob1 = 0
+    Cond_Blocked_dob1 = 0
+    Cond_Ready_dob1 = Ready_input_dob1
+    Cond_Falha_dob1 = Falha_input_dob1
+    Cond_Setup_dob1 = 0           ' Exemplo
+    Cond_Emergencia_dob1 = Emergency_input_dob1
+    CalcularEMostrarStatus_dob1
+    ' ---------------------------------------------------------------- 
+    
+    ' --- Processamento para DOB2 ---
+    TempoDeCicloEContagem_dob2
+    LerEntradas_dob2
 
-    ' Para testar o exemplo "Ready e Running (18)":
-    Cond_PlannedDownTime = 0
-    Cond_Running = 0 
-    Cond_Starving = 0
-    Cond_Blocked = 0
-    Cond_Ready = 0
-    IF Ready_4063 = 1 THEN Cond_Ready = 1 ELSE Cond_Ready = 0
-    Cond_Falha = 0
-    Cond_Setup = 0
-    IF Emergency_4063 = 1 THEN Cond_Emergencia = 1 ELSE Cond_Emergencia = 0    
-    CalcularEMostrarStatusMaquina
+    ' Definir condicoes de status para DOB2
+    Cond_PlannedDownTime_dob2 = 0
+    Cond_Running_dob2 = Running_input_dob2
+    Cond_Starving_dob2 = 0
+    Cond_Blocked_dob2 = 0
+    Cond_Ready_dob2 = Ready_input_dob2
+    Cond_Falha_dob2 = Falha_input_dob2
+    Cond_Setup_dob2 = 0
+    Cond_Emergencia_dob2 = Emergency_input_dob2
+    CalcularEMostrarStatus_dob2
+    ' ---------------------------------------------------------------- 
+
+    ' --- Processamento para DOB3 ---
+    TempoDeCicloEContagem_dob3
+    LerEntradas_dob3
+
+    ' Definir condicoes de status para DOB3
+    Cond_PlannedDownTime_dob3 = 0
+    Cond_Running_dob3 = Running_input_dob3
+    Cond_Starving_dob3 = 0
+    Cond_Blocked_dob3 = 0
+    Cond_Ready_dob3 = Ready_input_dob3
+    Cond_Falha_dob3 = Falha_input_dob3
+    Cond_Setup_dob3 = 0
+    Cond_Emergencia_dob3 = Emergency_input_dob3
+    CalcularEMostrarStatus_dob3
+    ' ---------------------------------------------------------------- 
+
+    ' --- Verifica Conexao com as Maquinas ---
+    ActiveConnection()
+
+    ' Pequeno delay para nao sobrecarregar o processador
+    DELAY(100)
 
 Wend
