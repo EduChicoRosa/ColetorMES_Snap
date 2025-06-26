@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid XML Objects - Registered to 'Sensonix ' - https://www.liquid-technologies.com/xml-objects -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file_info>
+    <info device="DXMR90x" filename="ColetorItaiopolis.xml" guid="8ae4006c-66c1-4104-9099-58647a3765d7" os="Win32NT" osversion="Microsoft Windows NT 6.2.9200.0" software="DXMConfigurationSoftware v4" solution="None" timestamp="25/06/2025 14:03:48" version="4.19.3.0" />
+  </file_info>
+  <local_regs>
+    <reg name="Cicle_Time_MAQ_1" num="1" />
+    <reg name="Produced_Good_MAQ_1" num="2" />
+    <reg name="Parts_Counter_MAQ_1" num="3" />
+    <reg name="Emergency_MAQ_1" num="4" />
+    <reg name="Setup_MAQ_1" num="5" />
+    <reg name="Failure_MAQ_1" num="6" />
+    <reg name="Ready_MAQ_1" num="7" />
+    <reg name="Blocked_MAQ_1" num="8" />
+    <reg name="Starving_MAQ_1" num="9" />
+    <reg name="Running_MAQ_1" num="10" />
+    <reg name="Word_Status_MAQ_1" num="11" numtype="int16" unsigned="0" />
+    <reg name="Cicle_Time_MAQ_2" num="17" />
+    <reg name="Produced_Good_MAQ_2" num="18" />
+    <reg name="Parts_Counter_MAQ_2" num="19" />
+    <reg name="Emergency_MAQ_2" num="20" />
+    <reg name="Setup_MAQ_2" num="21" />
+    <reg name="Failure_MAQ_2" num="22" />
+    <reg name="Ready_MAQ_2" num="23" />
+    <reg name="Blocked_MAQ_2" num="24" />
+    <reg name="Starving_MAQ_2" num="25" />
+    <reg name="Running_MAQ_2" num="26" />
+    <reg name="Word_Status_MAQ_2" num="27" />
+    <reg name="Cycle_Time_MAQ_3" num="33" />
+    <reg name="Produced_good_MAQ_3" num="34" />
+    <reg name="Parts_Counter_MAQ_3" num="35" />
+    <reg name="Emergency_MAQ_3" num="36" />
+    <reg name="Setup_MAQ_3" num="37" />
+    <reg name="Failure_MAQ_3" num="38" />
+    <reg name="Ready_MAQ_3" num="39" />
+    <reg name="Blocked_MAQ_3" num="40" />
+    <reg name="Starving_MAQ_3" num="41" />
+    <reg name="Running_MAQ_3" num="42" />
+    <reg name="Word_Status_MAQ_3" num="43" />
+    <reg cntr="1" name="TempoReg01" num="300" />
+    <reg cntr="1" name="TempoReg02" num="301" />
+    <reg cntr="1" name="TempoReg03" num="302" />
+    <reg cntr="1" name="TempoReg04" num="303" />
+    <reg cntr="1" name="TempoReg05" num="304" />
+    <reg cntr="1" name="TempoReg06" num="305" />
+    <reg cntr="1" name="TempoReg07" num="306" />
+    <reg cntr="1" name="TempoReg08" num="307" />
+    <reg cntr="1" name="TempoReg09" num="308" />
+    <reg cntr="1" name="TempoReg10" num="309" />
+    <reg cntr="10" name="TempoRegPulso01" num="310" />
+    <reg cntr="10" name="TempoRegPulso02" num="311" />
+    <reg cntr="10" name="TempoRegPulso03" num="312" />
+    <reg cntr="10" name="TempoRegPulso04" num="313" />
+    <reg cntr="10" name="TempoRegPulso05" num="314" />
+    <reg cntr="10" name="TempoRegPulso06" num="315" />
+    <reg cntr="10" name="TempoRegPulso07" num="316" />
+    <reg cntr="10" name="TempoRegPulso08" num="317" />
+    <reg cntr="10" name="TempoRegPulso09" num="318" />
+    <reg cntr="10" name="TempoRegPulso10" num="319" />
+    <reg name="Diferenca01" num="320" />
+    <reg name="Diferenca02" num="321" />
+    <reg name="Diferenca03" num="322" />
+    <reg name="Diferenca04" num="323" />
+    <reg name="Diferenca05" num="324" />
+    <reg name="Diferenca06" num="325" />
+    <reg name="Diferenca07" num="326" />
+    <reg name="Diferenca08" num="327" />
+    <reg name="Diferenca09" num="328" />
+    <reg name="Diferenca10" num="329" />
+  </local_regs>
+  <cascade />
+  <constant />
+  <calculate />
+  <thresholds />
+  <trend />
+  <rtu_read>
+    <rule count="1" default="0" localreg="3" mask="0" maxfail="0" name="Parts_Counter_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="1001" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="4" mask="0" maxfail="0" name="Emergency_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="1002" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="5" mask="0" maxfail="0" name="Setup_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="2001" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="6" mask="0" maxfail="0" name="Failure_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="2002" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="7" mask="0" maxfail="0" name="Ready_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="3001" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="8" mask="0" maxfail="0" name="Blocked_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="3002" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="9" mask="0" maxfail="0" name="Starving_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="4001" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="10" mask="0" maxfail="0" name="Running_MAQ_1" offset="0" poll="0.1" port="4" remfmt="int" remreg="4002" remtype="hold_reg" scale="0" swapped="0" unit="20" />
+    <rule count="1" default="0" localreg="19" mask="0" maxfail="0" name="Parts_Counter_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="1001" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="20" mask="0" maxfail="0" name="Emergency_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="1002" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="21" mask="0" maxfail="0" name="Setup_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="2001" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="22" mask="0" maxfail="0" name="Failure_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="2002" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="23" mask="0" maxfail="0" name="Ready_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="3001" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="24" mask="0" maxfail="0" name="Blocked_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="3002" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="25" mask="0" maxfail="0" name="Starving_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="4001" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="26" mask="0" maxfail="0" name="Running_MAQ_2" offset="0" poll="0.1" port="4" remfmt="int" remreg="4002" remtype="hold_reg" scale="0" swapped="0" unit="21" />
+    <rule count="1" default="0" localreg="35" mask="0" maxfail="0" name="Parts_Counter_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="1001" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+    <rule count="1" default="0" localreg="36" mask="0" maxfail="0" name="Emergency_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="1002" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+    <rule count="1" default="0" localreg="37" mask="0" maxfail="0" name="Setup_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="2001" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+    <rule count="1" default="0" localreg="38" mask="0" maxfail="0" name="Failure_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="2002" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+    <rule count="1" default="0" localreg="39" mask="0" maxfail="0" name="Ready_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="3001" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+    <rule count="1" default="0" localreg="40" mask="0" maxfail="0" name="Blocked_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="3002" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+    <rule count="1" default="0" localreg="41" mask="0" maxfail="0" name="Starving_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="4001" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+    <rule count="1" default="0" localreg="42" mask="0" maxfail="0" name="Running_MAQ_3" offset="0" poll="0.1" port="4" remfmt="int" remreg="4002" remtype="hold_reg" scale="0" swapped="0" unit="22" />
+  </rtu_read>
+  <rtu_write />
+  <sched_holidays />
+  <sched_commands />
+  <sched_events />
+  <astro_clock>
+    <set dst="0" lat="0" lon="0" zone="0" />
+  </astro_clock>
+  <gps>
+    <unit addr="0" enabled="0" flags="0" lograte="00:00:00" poll="00:00:00" />
+  </gps>
+  <master_mode>
+    <mode opt="1" state="0" />
+  </master_mode>
+  <rtu_device>
+    <bus baud="19200" commtype="485" data="8" parity="0" port="0" rate="50" stop="1" thisUnit="255" timeout="5" />
+    <bus baud="19200" commtype="485" data="8" parity="0" port="1" rate="50" stop="1" thisUnit="255" timeout="5" />
+    <bus baud="19200" commtype="485" data="8" parity="0" port="2" rate="50" stop="1" thisUnit="255" timeout="5" />
+    <bus baud="19200" commtype="485" data="8" parity="0" port="3" rate="50" stop="1" thisUnit="255" timeout="5" />
+    <bus baud="19200" commtype="485" data="8" parity="0" port="4" rate="50" stop="1" thisUnit="255" timeout="5" />
+  </rtu_device>
+  <rtu_server>
+    <dev baud="19200" commtype="485" data="8" parity="0" stop="1" timeout="0" />
+  </rtu_server>
+  <scripts>
+    <script baud="19200" data="8" delay="2000" enabled="1" parity="0" path="ColItaiopolis.sb" stop="1" />
+  </scripts>
+  <timekeepers>
+    <timekeeper address="0.0.0.0" enabled="1" interval="0" name="external" priority="3" />
+    <timekeeper address="0.0.0.0" enabled="0" interval="0" name="internal" priority="2" />
+    <timekeeper address="0.0.0.0" enabled="0" interval="0" name="network" priority="1" />
+  </timekeepers>
+  <system_types />
+  <log_files>
+    <fileinfo>
+      <message />
+      <log dir="1" email="" enab="0" end="00:00:00" full="0" name="EventLog.txt" new="0" rate="00:00:00" reg="0" size="102400" subject="" tod="1" />
+    </fileinfo>
+    <fileinfo>
+      <message />
+      <log dir="1" email="" enab="0" end="00:00:00" full="0" name="LogFile1.txt" new="0" rate="00:00:00" reg="0" size="102400" subject="" tod="5" />
+    </fileinfo>
+    <fileinfo>
+      <message />
+      <log dir="1" email="" enab="0" end="00:00:00" full="0" name="LogFile2.txt" new="0" rate="00:00:00" reg="0" size="102400" subject="" tod="5" />
+    </fileinfo>
+    <fileinfo>
+      <message />
+      <log dir="1" email="" enab="0" end="00:00:00" full="0" name="LogFile3.txt" new="0" rate="00:00:00" reg="0" size="102400" subject="" tod="5" />
+    </fileinfo>
+    <fileinfo>
+      <message />
+      <log dir="1" email="" enab="1" end="00:00:00" full="1" name="HttpLog.txt" new="0" rate="00:00:00" reg="0" size="0" subject="" tod="1" />
+    </fileinfo>
+  </log_files>
+  <device_sync>
+    <device sync_rollover="100000000" />
+  </device_sync>
+  <email_server>
+    <server auth="" domain="" pass="" pop3="" pop3domain="" pop3user="" port="25" pwd="" smtp="" sysrep="0" useauth="0" user="" />
+  </email_server>
+  <server_params>
+    <server apn="IP" apnpass="vzwinternet" cellenab="8" cellfw="0.0.0.0" cellfwmask="255.255.255.0" defaddr="192.168.0.1" defgtwy="0.0.0.0" defmask="255.255.255.0" dhcp="0" sms="0" />
+    <cell_info cell_modelname="SXI-CATM1VZW-001" />
+    <maint cexch="0" ckeep="0" csflags="0" csqbak="0" csqret="5" csrvre="0" csrvwd="0" linkdel="60000" linkmax="120000" linkret="2" />
+    <eth flags="0" />
+    <apn idx="1" name="" type="IPV4V6" />
+    <apn idx="2" name="vzwadmin" type="IPV4V6" />
+    <apn idx="3" name="vzwinternet" type="IPV4V6" />
+    <apn idx="4" name="vzwapp" type="IPV4V6" />
+    <apn idx="5" name="vzw800" type="IPV4V6" />
+    <apn idx="6" name="vzwclass6" type="IPV4V6" />
+    <cx en="1" />
+    <netif flags="0" gw4="0.0.0.0" ip4="0.0.0.0" mode="1" sn4="0.0.0.0" />
+  </server_params>
+  <http_push>
+    <dns address="0.0.0.0" />
+    <dns address="0.0.0.0" />
+    <push arch="9" debug="0" enabled="1" flags="4104" host="push.bannercds.com" id="00000000-0000-0000-0000-000000000000" interval="00:00:00" page="/push.aspx" port="80" rets="5" vendor="0" />
+  </http_push>
+  <fwall />
+  <profinet>
+    <io en="0" flags="0" />
+  </profinet>
+  <iot>
+    <mqtt debug="0" en="0" flags="5" host="" id=" " ping="50000" port="8883" throttle="0" vendor="7" />
+  </iot>
+</configuration>

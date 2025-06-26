@@ -1,0 +1,164 @@
+'Endereco padrao
+CONST DXM_LocalReg	= 199
+
+'MODBUSTYPE para cada porta
+CONST Port_0 = 0
+CONST Port_1 = 256
+CONST Port_2 = 512
+CONST Port_3 = 768
+CONST Port_4 = 1024
+
+'SLAVE IDs somado do offset para porta
+CONST MB_Broadcast	= 0
+CONST HUB1 = 20
+CONST HUB2 = 21
+CONST HUB3 = 22
+CONST HUB4 = 23
+CONST HUB5 = 24
+CONST HUB6 = 25
+CONST HUB7 = 26
+CONST HUB8 = 27
+
+'Registradores Locais
+CONST TempoReg = 300
+CONST TempoRegPulso = 310
+CONST Diferenca = 320
+CONST TempoDeCiclo = 1
+CONST Contador = 2
+CONST activeConnections = 12
+
+'Registrador do HUB
+CONST P2_Active_State = 1002
+CONST P2_Counter = 1012
+CONST P4_Counter = 1004
+
+'Variaveis internas
+TemponovoPulso1 = 0
+TemponovoPulso2 = 0
+TemponovoPulso3 = 0
+TemponovoPulso4 = 0
+TemponovoPulso5 = 0
+TemponovoPulso6 = 0
+TemponovoPulso7 = 0
+TemponovoPulso8 = 0
+i0 = 0
+i1 = 0
+i2 = 0
+i3 = 0
+i4 = 0
+i5 = 0
+i6 = 0
+i7 = 0
+i8 = 0
+active1 = 0
+active2 = 0
+active3 = 0
+active4 = 0
+active5 = 0
+active6 = 0
+active7 = 0
+active8 = 0
+
+FUNCTION ResetTimer(TReg)
+    Err = SETREG(TReg, 0, DXM_LocalReg, HoldingReg)
+END FUNCTION
+
+FUNCTION TempoDeCicloEContagemHUB1
+LOCAL MAQ_1_LReg_Timer, MAQ_1_CycleTime, MAQ_1_WordStatus
+'Leitura do registrador de contagem do HUB (Pino 2 da Porta 1 do R95C).
+MAQ_1_HUB_Counter = GETREG(P4_Counter, HUB1, Port_4)
+MAQ_1_WordStatus = 2*GETREG(10, DXM_LocalReg, HoldingReg) + 4*GETREG(9, DXM_LocalReg, HoldingReg) + 8*GETREG(8, DXM_LocalReg, HoldingReg) + 16*GETREG(7, DXM_LocalReg, HoldingReg) + 32*GETREG(6, DXM_LocalReg, HoldingReg) + 64*GETREG(5, DXM_LocalReg, HoldingReg) + 128*GETREG(4, DXM_LocalReg, HoldingReg)
+Err = SETREG(11,MAQ_1_WordStatus,DXM_LocalReg,HoldingReg)
+MAQ_1_LReg_Timer = GETREG(HUB1+TempoReg+1-20, DXM_LocalReg, HoldingReg)
+'Comparo o contador interno com o contador do HUB, se for diferente, entra na condicao.
+IF MAQ_1_HUB_Counter <> MAQ_1_HUB_Counter_Atual THEN
+    'Somo a variavel de contagem 
+    i0=i0+1
+    'Escrevo a variavel de contagem no registrador local "Contador" '
+    Err = SETREG(((HUB1*16)+2-320),i0,DXM_LocalReg,HoldingReg)
+    MAQ_1_CycleTime = MAQ_1_LReg_Timer
+    print "Tempo de ciclo HUB 1: ", MAQ_1_CycleTime, "\n"
+    'Escrevo a variavel de contagem no registrador local "TempoDeCiclo"
+    Err = SETREG(((HUB1*16)+1-320), MAQ_1_CycleTime, DXM_LocalReg, HoldingReg)
+    'Reseto o tempo do registrador local para iniciar a contagem de um novo ciclo
+    ResetTimer(HUB1+TempoReg+1-20)
+    MAQ_1_HUB_Counter_Atual = MAQ_1_HUB_Counter
+    print "Contador HUB 1: ", MAQ_1_HUB_Counter_Atual, "\n"
+END IF
+'Caso o valor de contagem atinja 9999, o contador e zerado
+IF i0 = 9999 THEN
+    i0 = 0
+END IF
+END FUNCTION
+
+FUNCTION TempoDeCicloEContagemHUB2
+LOCAL MAQ_2_LReg_Timer, MAQ_2_CycleTime, MAQ_2_WordStatus
+'Leitura do registrador de contagem do HUB (Pino 2 da Porta 1 do R95C)
+MAQ_2_HUB_Counter = GETREG(P4_Counter, HUB2, Port_4)
+MAQ_2_WordStatus = 2*GETREG(26, DXM_LocalReg, HoldingReg) + 4*GETREG(25, DXM_LocalReg, HoldingReg) + 8*GETREG(24, DXM_LocalReg, HoldingReg) + 16*GETREG(23, DXM_LocalReg, HoldingReg) + 32*GETREG(22, DXM_LocalReg, HoldingReg) + 64*GETREG(21, DXM_LocalReg, HoldingReg) + 128*GETREG(20, DXM_LocalReg, HoldingReg)
+Err = SETREG(27,MAQ_2_WordStatus,DXM_LocalReg,HoldingReg)
+MAQ_2_LReg_Timer = GETREG(HUB2+TempoReg+1-20, DXM_LocalReg, HoldingReg)
+'Comparo o contador interno com o contador do HUB, se for diferente, entra na condicao.
+IF MAQ_2_HUB_Counter <> MAQ_2_HUB_Counter_Atual THEN
+    'Somo a variavel de contagem
+    i1=i1+1
+    'Escrevo a variavel de contagem no registrador local "Contador" '
+    Err = SETREG(((HUB2*16)+2-320),i1,DXM_LocalReg,HoldingReg)
+    MAQ_2_CycleTime = MAQ_2_LReg_Timer
+    print "Tempo de ciclo HUB 2: ", MAQ_2_CycleTime, "\n"
+    'Escrevo a variavel de contagem no registrador local "TempoDeCiclo" '
+    Err = SETREG(((HUB2*16)+1-320), MAQ_2_CycleTime, DXM_LocalReg, HoldingReg)
+    'Reseto o tempo do registrador local para iniciar a contagem de um novo ciclo
+    ResetTimer(HUB2+TempoReg+1-20)
+    MAQ_2_HUB_Counter_Atual = MAQ_2_HUB_Counter
+    print "Contador HUB 2: ", MAQ_2_HUB_Counter_Atual, "\n"
+END IF
+'Caso o valor de contagem atinja 9999, o contador e zerado
+IF i1 = 9999 THEN
+    i1 = 0
+END IF
+END FUNCTION
+
+FUNCTION TempoDeCicloEContagemHUB3
+LOCAL MAQ_3_LReg_Timer, MAQ_3_CycleTime, MAQ_3_WordStatus
+'Leitura do registrador de contagem do HUB (Pino 2 da Porta 1 do R95C)
+MAQ_3_HUB_Counter = GETREG(P4_Counter, HUB3, Port_4)
+MAQ_3_WordStatus = 2*GETREG(42, DXM_LocalReg, HoldingReg) + 4*GETREG(41, DXM_LocalReg, HoldingReg) + 8*GETREG(40, DXM_LocalReg, HoldingReg) + 16*GETREG(39, DXM_LocalReg, HoldingReg) + 32*GETREG(38, DXM_LocalReg, HoldingReg) + 64*GETREG(37, DXM_LocalReg, HoldingReg) + 128*GETREG(36, DXM_LocalReg, HoldingReg)
+Err = SETREG(43,MAQ_3_WordStatus,DXM_LocalReg,HoldingReg)
+MAQ_3_LReg_Timer = GETREG(HUB3+TempoReg+1-20, DXM_LocalReg, HoldingReg)
+'Comparo o contador interno com o contador do HUB, se for diferente, entra na condicao.
+IF MAQ_3_HUB_Counter <> MAQ_3_HUB_Counter_Atual THEN
+    'Somo a variavel de contagem
+    i2=i2+1
+    'Escrevo a variavel de contagem no registrador local "Contador" '
+    Err = SETREG(((HUB3*16)+2-320),i2,DXM_LocalReg,HoldingReg)
+    MAQ_3_CycleTime = MAQ_3_LReg_Timer
+    print "Tempo de ciclo HUB 3: ", MAQ_3_CycleTime, "\n"
+    'Escrevo a variavel de contagem no registrador local "TempoDeCiclo" '
+    Err = SETREG(((HUB3*16)+1-320), MAQ_3_CycleTime, DXM_LocalReg, HoldingReg)
+    'Reseto o tempo do registrador local para iniciar a contagem de um novo ciclo
+    ResetTimer(HUB3+TempoReg+1-20)
+    MAQ_3_HUB_Counter_Atual = MAQ_3_HUB_Counter
+    print "Contador HUB 3: ", MAQ_3_HUB_Counter_Atual, "\n"
+END IF
+'Caso o valor de contagem atinja 9999, o contador e zerado
+IF i2 = 9999 THEN
+    i2 = 0
+END IF
+END FUNCTION
+
+'WHILE DE EXECUCAO DO SCRIPT
+While(1)
+    
+    'Chamo a funcao de tempo de ciclo e contagem a cada ciclo do while
+    TempoDeCicloEContagemHUB1
+    TempoDeCicloEContagemHUB2
+    TempoDeCicloEContagemHUB3
+
+    'Chamo a funcao de gerar pulso
+    'GeraPulsoHUB1
+    'GeraPulsoHUB2
+    'GeraPulsoHUB3
+   
+
+Wend
